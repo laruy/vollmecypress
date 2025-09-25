@@ -24,7 +24,7 @@ jobs:
         working-directory: web
         run: npm ci
 
-      - name: Run Cypress (start + wait-on)
+      - name: Run Cypress (root project, front em web/)
         uses: cypress-io/github-action@v6
         with:
           # 👇🏽 aqui roda na raiz, não em web

@@ -27,7 +27,7 @@ jobs:
           working-directory: web
           start: npm start
           wait-on: |
-            http://localhost:3000
+            http://localhost:3000,
             https://vollmecypress-server-1.onrender.com
           wait-on-timeout: 120
           spec: |

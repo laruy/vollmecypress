@@ -15,33 +15,39 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      # instala deps do projeto root (onde está o Cypress)
-      - name: Install root deps
-        run: npm ci
+      - name: Start Web App FrontEnd
+        run: |
+          cd web
+          npm install
+          npm start &
 
-      # instala deps do front
-      - name: Install front deps
-        working-directory: web
-        run: npm ci
-
-      - name: Run Cypress (root project, front em web/)
+      - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
-          # 👇🏽 aqui roda na raiz, não em web
-          working-directory: .
-          # sobe o front na pasta web
-          start: npm start --prefix web
-          wait-on: http://localhost:3000, https://vollmecypress-server-1.onrender.com
-          wait-on-timeout: 180
-          config: baseUrl=http://localhost:3000
           spec: |
             cypress/e2e/cadastro-sucesso.cy.js
             cypress/e2e/login-clinica.cy.js
             cypress/e2e/dashboard.cy.js
-          record: true
-          parallel: true
-          group: 'Cypress Tests'
-        env:
-          API_URL: https://vollmecypress-server-1.onrender.com
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          wait-on: 'http://localhost:3000,https://vollmecypress-server-1.onrender.com'
+
+      # - name: Run Cypress (start + wait-on)
+      #   uses: cypress-io/github-action@v6
+      #   with:
+      #     #  aqui roda na raiz, não em web
+      #     working-directory: .
+      #     # sobe o front na pasta web
+      #     start: npm start --prefix web
+      #     wait-on: http://localhost:3000, https://vollmecypress-server-1.onrender.com
+      #     wait-on-timeout: 180
+      #     config: baseUrl=http://localhost:3000
+      #     spec: |
+      #       cypress/e2e/cadastro-sucesso.cy.js
+      #       cypress/e2e/login-clinica.cy.js
+      #       cypress/e2e/dashboard.cy.js
+      #     record: true
+      #     parallel: true
+      #     group: 'Cypress Tests'
+      #   env:
+      #     API_URL: https://vollmecypress-server-1.onrender.com
+      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

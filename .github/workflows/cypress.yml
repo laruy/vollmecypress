@@ -2,34 +2,38 @@ name: Cypress Tests
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: {}
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
 
-      # Instala e inicia o FRONT local (ajuste o diretório!)
-      - name: Install front
+      # instala deps do projeto root (onde está o Cypress)
+      - name: Install root deps
+        run: npm ci
+
+      # instala deps do front
+      - name: Install front deps
         working-directory: web
         run: npm ci
 
       - name: Run Cypress (start + wait-on)
         uses: cypress-io/github-action@v6
         with:
-          working-directory: web
-          start: npm start
-          wait-on: |
-            http://localhost:3000,
-            https://vollmecypress-server-1.onrender.com
-          wait-on-timeout: 120
+          # 👇🏽 aqui roda na raiz, não em web
+          working-directory: .
+          # sobe o front na pasta web
+          start: npm start --prefix web
+          wait-on: http://localhost:3000, https://vollmecypress-server-1.onrender.com
+          wait-on-timeout: 180
+          config: baseUrl=http://localhost:3000
           spec: |
             cypress/e2e/cadastro-sucesso.cy.js
             cypress/e2e/login-clinica.cy.js

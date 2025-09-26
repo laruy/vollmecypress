@@ -7,6 +7,10 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    strategy: 
+      fail-fast: false
+      matrix: 
+        containers: [1, 2]
     steps:
       - uses: actions/checkout@v4
 
@@ -30,6 +34,8 @@ jobs:
             cypress/e2e/dashboard.cy.js
           wait-on: 'http://localhost:3000,https://vollmecypress-server-1.onrender.com'
           record: true
+          parallel: true
+          group: 'Cypress Tests'
 
         env:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY

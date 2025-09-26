@@ -29,25 +29,11 @@ jobs:
             cypress/e2e/login-clinica.cy.js
             cypress/e2e/dashboard.cy.js
           wait-on: 'http://localhost:3000,https://vollmecypress-server-1.onrender.com'
+          record: true
 
-      # - name: Run Cypress (start + wait-on)
-      #   uses: cypress-io/github-action@v6
-      #   with:
-      #     #  aqui roda na raiz, não em web
-      #     working-directory: .
-      #     # sobe o front na pasta web
-      #     start: npm start --prefix web
-      #     wait-on: http://localhost:3000, https://vollmecypress-server-1.onrender.com
-      #     wait-on-timeout: 180
-      #     config: baseUrl=http://localhost:3000
-      #     spec: |
-      #       cypress/e2e/cadastro-sucesso.cy.js
-      #       cypress/e2e/login-clinica.cy.js
-      #       cypress/e2e/dashboard.cy.js
-      #     record: true
-      #     parallel: true
-      #     group: 'Cypress Tests'
-      #   env:
-      #     API_URL: https://vollmecypress-server-1.onrender.com
-      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
+          # in GitHub repo → Settings → Secrets → Actions
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
